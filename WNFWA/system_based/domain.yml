@@ -1,0 +1,117 @@
+{{ if .Vars.WNFWA_cat1 }}
+command:
+  {{ if .Vars.WNFWA_000004 }}
+  domain_firewall_block_inbound:
+    title: 000004 | The Windows Firewall with Advanced Security must block unsolicited inbound connections when connected to a domain.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_SHARED_FW_DOM }} Name EnableFirewall
+    exit-status: 0
+    stdout:
+    - '1'
+    meta:
+      Cat: 1
+      CCI:
+      - CCI-000382
+      Group_Title: SRG-OS-000480-GPOS-00227
+      Rule_ID: SV-241992r698217_rule
+      STIG_ID: WNFWA-000004
+      Vul_ID: V-241992
+  {{ end }}
+{{ end }}
+{{ if .Vars.WNFWA_cat2 }}
+  {{ if .Vars.WNFWA_000001 }}
+  public_fw_on:
+    title: 000001 | The Windows Firewall with Advanced Security must be enabled when connected to a domain.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_SHARED_FW_DOM }} -Name EnableFirewall
+    exit-status: 0
+    stdout:
+    - '1'
+    meta:
+      Cat: 2
+      CCI:
+      - CCI-001414
+      Group_Title: SRG-OS-000480-GPOS-00227
+      Rule_ID: SV-241989r698208_rule
+      STIG_ID: WNFWA-000001
+      Vul_ID: V-241989
+  on_domain_but_not_policy:
+    title: 000001 | The Windows Firewall with Advanced Security must be enabled when connected to a domain. | Preferred method
+    exec: echo "Not Preferred Method - System is a domain member but using system FW domain profile"
+    exit-status: 0
+    stdout:
+    - '!/.*/'
+    meta:
+      Cat: 2
+      CCI:
+      - CCI-001414
+      Group_Title: SRG-OS-000480-GPOS-00227
+      Rule_ID: SV-241989r698208_rule
+      STIG_ID: WNFWA-000001
+      Vul_ID: V-241989
+  {{ end }}
+  {{ if .Vars.WNFWA_000005 }}
+  domain_firewall_block_outbound:
+    title: 000005 The Windows Firewall with Advanced Security must allow outbound connections, unless a rule explicitly blocks the connection when connected to a domain.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_SHARED_FW_DOM }} -Name DefaultOutboundAction
+    exit-status: 0
+    stdout:
+    - '0'
+    meta:
+      Cat: 2
+      CCI:
+      - CCI-001094
+      Group_Title: SRG-OS-000480-GPOS-00227
+      Rule_ID: SV-241993r698220_rule
+      STIG_ID: WNFWA-000005
+      Vul_ID: V-241993
+  {{ end }}
+{{ end }}
+{{ if .Vars.WNFWA_cat3 }}
+  {{ if .Vars.WNFWA_000009 }}
+  domain_firewall_logsize:
+    title: 000009 | The Windows Firewall with Advanced Security log size must be configured for domain connections.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_SHARED_FW_DOM_LOG }} -Name LogFileSize
+    exit-status: 0
+    stdout:
+    - '/(^16[3-9][8-9][4-9]|1[7-9]\d{3,}|[2-9][0-9]{4,}|[1-9][0-9]{5,})/'
+    meta:
+      Cat: 3
+      CCI:
+      - CCI-000140
+      Group_Title: SRG-OS-000327-GPOS-00127
+      Rule_ID: SV-241994r698223_rule
+      STIG_ID: WNFWA-000009
+      Vul_ID: V-241994
+  {{ end }}
+  {{ if .Vars.WNFWA-000010 }}
+  domain_firewall_log_dropped:
+    title: 000010| The Windows Firewall with Advanced Security must log dropped packets when connected to a domain.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_SHARED_FW_DOM_LOG }} -Name LogDroppedPackets
+    exit-status: 0
+    stdout:
+    - '1'
+    meta:
+      Cat: 3
+      CCI:
+      - CCI-000172
+      Group_Title: SRG-OS-000327-GPOS-00127
+      Rule_ID: SV-241995r698226_rule
+      STIG_ID: WNFWA-000010
+      Vul_ID: V-241995
+  {{ end }}
+  {{ if .Vars.WNFWA-000011}}
+  domain_firewall_log_success:
+    title: 000011 | The Windows Firewall with Advanced Security must log successful connections when connected to a domain.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_SHARED_FW_DOM_LOG }} -Name LogSuccessfulConnections
+    exit-status: 0
+    stdout:
+    - '1'
+    meta:
+      Cat: 3
+      CCI:
+      - CCI-001462
+      Group_Title: SRG-OS-000327-GPOS-00127
+      Rule_ID: SV-241996r698229_rule
+      STIG_ID: WNFWA-000011
+      Vul_ID: V-241996
+  {{ end }}
+{{ end }}

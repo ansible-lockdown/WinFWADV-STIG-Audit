@@ -1,0 +1,137 @@
+{{ if .Vars.WNFWA_public }}
+  {{ if .Vars.WNFWA_cat1 }}
+command:
+    {{ if .Vars.WNFWA_000020 }}
+  public_firewall_block_inbound:
+    title: 000020 | The Windows Firewall with Advanced Security must block unsolicited inbound connections when connected to a public network.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB }} -Name DefaultInboundAction
+    exit-status: 0
+    stdout:
+    - '0'
+    meta:
+      Cat: 1
+      CCI:
+      - CCI-000382
+      Group_Title: SRG-OS-000480-GPOS-00227
+      Rule_ID: SV-242002r698247_rule
+      STIG_ID: WNFWA-000020
+      Vul_ID: V-242002
+    {{ end }}
+  {{ end }}
+  {{ if .Vars.WNFWA_cat2 }}
+    {{ if .Vars.WNFWA_000003 }}
+  Public_firewall_on:
+    title: 000003 | The Windows Firewall with Advanced Security must be enabled when connected to a public network.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB }} -Name EnableFirewall
+    exit-status: 0
+    stdout:
+    - '1'
+    meta:
+      Cat: 2
+      CCI:
+      - CCI-001414
+      Group_Title: SRG-OS-000480-GPOS-00227
+      Rule_ID: SV-241991r698214_rule
+      STIG_ID: WNFWA-000003
+      Vul_ID: V-241991
+    {{ end }}
+    {{ if .Vars.WNFWA_000021 }}
+  public_firewall_block_outbound:
+    title: 000021 | The Windows Firewall with Advanced Security must allow outbound connections, unless a rule explicitly blocks the connection when connected to a public network.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB }} -Name DefaultOutboundAction
+    exit-status: 0
+    stdout:
+    - '0'
+    meta:
+      Cat: 2
+      CCI:
+      - CCI-001094
+      Group_Title: SRG-OS-000480-GPOS-00227
+      Rule_ID: SV-242003r698250_rule
+      STIG_ID: WNFWA-000021
+      Vul_ID: V-242003
+    {{ end }}
+    {{ if .Vars.WNFWA_000024 }}
+  local_public_firewall_merged_gpo:
+    title: 000024 | The Windows Firewall with Advanced Security local firewall rules must not be merged with Group Policy settings when connected to a public network.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB }} -Name AllowLocalPolicyMerge
+    exit-status: 0
+    stdout:
+    - '0'
+    meta:
+      Cat: 2
+      CCI:
+      - CCI-001190
+      Group_Title: SRG-OS-000327-GPOS-00127
+      Rule_ID: SV-242004r698253_rule
+      STIG_ID: WNFWA-000024
+      Vul_ID: V-242004
+    {{ end }}
+    {{ if .Vars.WNFWA_000025 }}
+  local_public_connect_merged_gpo:
+    title: 000025 | The Windows Firewall with Advanced Security local connection rules must not be merged with Group Policy settings when connected to a public network.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB }} -Name AllowLocalIPsecPolicyMerge
+    exit-status: 0
+    stdout:
+    - '0'
+    meta:
+      Cat: 2
+      CCI:
+      - CCI-001190
+      Group_Title: SRG-OS-000327-GPOS-00127
+      Rule_ID: SV-242005r698256_rule
+      STIG_ID: WNFWA-000025
+      Vul_ID: V-242005
+    {{ end }}
+  {{ end }}
+  {{ if .Vars.WNFWA_cat3 }}
+    {{ if .Vars.WNFWA_000027 }}
+  public_firewall_logsize:
+    title: 000027 | The Windows Firewall with Advanced Security log size must be configured for public network connections.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB_LOG }} -Name LogFileSize
+    exit-status: 0
+    stdout:
+    - '/(^16[3-9][8-9][4-9]|1[7-9]\d{3,}|[2-9][0-9]{4,}|[1-9][0-9]{5,})/'
+    meta:
+      Cat: 3
+      CCI:
+      - CCI-000140
+      Group_Title: SRG-OS-000327-GPOS-00127
+      Rule_ID: SV-242006r698259_rule
+      STIG_ID: WNFWA-000027
+      Vul_ID: V-242006
+    {{ end }}
+    {{ if .Vars.WNFWA-000028 }}
+  public_firewall_log_dropped:
+    title: 000028 | The Windows Firewall with Advanced Security must log dropped packets when connected to a public network.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB_LOG }} -Name LogDroppedPackets
+    exit-status: 0
+    stdout:
+    - '1'
+    meta:
+      Cat: 3
+      CCI:
+      - CCI-000172
+      Group_Title: SRG-OS-000327-GPOS-00127
+      Rule_ID: SV-242007r698262_rule
+      STIG_ID: WNFWA-000028
+      Vul_ID: V-242007
+    {{ end }}
+    {{ if .Vars.WNFWA-000029 }}
+  public_firewall_log_success:
+    title: 000029 | The Windows Firewall with Advanced Security must log successful connections when connected to a public network.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB_LOG }} -Name LogSuccessfulConnections
+    exit-status: 0
+    stdout:
+    - '1'
+    meta:
+      Cat: 3
+      CCI:
+      - CCI-001462
+      Group_Title: SRG-OS-000327-GPOS-00127
+      Rule_ID: SV-242008r698265_rule
+      STIG_ID: WNFWA-000029
+      Vul_ID: V-242008
+    {{ end }}
+  {{ end }}
+{{ end }}

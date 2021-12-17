@@ -1,0 +1,78 @@
+# Microsoft Windows Firewall with Advanced Security
+
+WNFWA_cat1: true
+WNFWA_cat2: true
+WNFWA_cat3: true
+
+# Domain member set via wrapper script 
+# if running manually uncomment and set here
+#domain_member: true
+
+# Location to output the workstation inbound firewall rules for assessment
+inbound_rules_audit_output: c:\tmp\inbound_rules.txt 
+
+
+# Domain
+WNFWA_domain: true
+WNFWA_000001: true
+WNFWA_000004: true
+WNFWA_000005: true
+WNFWA_000009: true
+WNFWA_000010: true
+WNFWA_000011: true
+
+# Private
+WNFWA_private: true
+WNFWA_000012: true
+WNFWA_000013: true
+WNFWA_000017: true
+WNFWA_000018: true
+WNFWA_000019: true
+
+# Public
+WNFWA_public: true
+WNFWA_000020: true
+WNFWA_000021: true
+WNFWA_000024: true
+WNFWA_000025: true
+WNFWA_000027: true
+WNFWA_000028: true
+WNFWA_000029: true
+
+# Domain Workstation cpature inbound rules
+WNFWA_00100: true
+
+# Commands used in tasks
+ps_regcheck: 'powershell -noprofile -noninteractive -command'
+
+# reg paths
+# Policies if Domain member
+# domain
+HKLM_POL_FW_DOM: Get-ItemPropertyValue -path 'HKLM:/SOFTWARE/Policies/Microsoft/WindowsFirewall/DomainProfile'
+HKLM_POL_FW_DOM_LOG: Get-ItemPropertyValue -path 'HKLM:/SOFTWARE/Policies/Microsoft/WindowsFirewall/DomainProfile/Logging'
+# private
+HKLM_POL_FW_PRV: Get-ItemPropertyValue -path 'HKLM:/SOFTWARE/Policies/Microsoft/WindowsFirewall/PrivateProfile'
+HKLM_POL_FW_PRV_LOG: Get-ItemPropertyValue -path 'HKLM:/SOFTWARE/Policies/Microsoft/WindowsFirewall/PrivateProfile/Logging'
+# public
+HKLM_POL_FW_PUB: Get-ItemPropertyValue -path 'HKLM:/SOFTWARE/Policies/Microsoft/WindowsFirewall/PublicProfile'
+HKLM_POL_FW_PUB_LOG: Get-ItemPropertyValue -path 'HKLM:/SOFTWARE/Policies/Microsoft/WindowsFirewall/PublicProfile/Logging'
+
+# shared
+HKLM_SHARED_FW_DOM: Get-ItemPropertyValue -path 'HKLM:SYSTEM/CurrentControlSet/Services/SharedAccess/Parameters/FirewallPolicy/DomainProfile'
+HKLM_SHARED_FW_STD: Get-ItemPropertyValue -path 'HKLM:SYSTEM/CurrentControlSet/Services/SharedAccess/Parameters/FirewallPolicy/StandardProfile'
+HKLM_SHARED_FW_PUB: Get-ItemPropertyValue -path 'HKLM:SYSTEM/CurrentControlSet/Services/SharedAccess/Parameters/FirewallPolicy/PublicProfile'
+HKLM_SHARED_FW_DOM_LOG: Get-ItemPropertyValue -path 'HKLM:SYSTEM/CurrentControlSet/Services/SharedAccess/Parameters/FirewallPolicy/DomainProfile/Logging'
+HKLM_SHARED_FW_STD_LOG: Get-ItemPropertyValue -path 'HKLM:SYSTEM/CurrentControlSet/Services/SharedAccess/Parameters/FirewallPolicy/StandardProfile/Logging'
+HKLM_SHARED_FW_PUB_LOG: Get-ItemPropertyValue -path 'HKLM:SYSTEM/CurrentControlSet/Services/SharedAccess/Parameters/FirewallPolicy/PublicProfile/Logging'
+
+# Get firewall rules from system 
+get_inbound_rules: "Show-NetFirewallRule | where {$_.enabled -eq $True -AND $_.direction -eq 'inbound'} |
+Format-Table -Property Name,
+Profile,
+@{Name='LocalPort';Expression={($PSItem | Get-NetFirewallPortFilter).LocalPort}},
+@{Name='Protocol';Expression={($PSItem | Get-NetFirewallPortFilter).Protocol}},
+@{Name='RemoteAddress';Expression={($PSItem | Get-NetFirewallAddressFilter).RemoteAddress}},
+@{Name='RemotePort';Expression={($PSItem | Get-NetFirewallPortFilter).RemotePort}},
+Direction,
+Action | Out-File"
+

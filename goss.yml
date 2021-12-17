@@ -1,0 +1,45 @@
+gossfile:
+
+# Domain firewall profile checks
+#  If the system is not a member of a domain, the Domain Profile requirements can be marked NA.
+
+{{ if .Vars.WNFWA_domain}}
+  {{ if .Vars.domain_member }}
+    {{ if .Vars.domain_policy_enable }}
+    policy_based/domain.yml: {}
+    {{ end }}
+    {{ if not .Vars.domain_policy_enable }}  # Adds extra step for alert not preferred method
+    system_based/domain.yml
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+# Private firewall profile checks
+{{ if .Vars.WNFWA_private }}
+  {{ if .Vars.private_policy_enable }}
+  policy_based/private.yml: {}
+  {{ end }}
+  {{ if not .Vars.private_policy_enable }}  # Adds extra check as its not the preferred method if on domain
+  system_based/private.yml: {}
+  {{ end }}
+{{ end }}
+
+# Public firewall profile checks
+{{ if .Vars.WNFWA_public }}
+    {{ if .Vars.public_policy_enable }}
+    policy_based/public.yml: {}
+    {{ end }}
+    {{ if not .Vars.public_policy_enable }}  # Adds extra check as its not the preferred method if on domain
+    system_based/public.yml: {}
+    {{ end }}
+  {{ if .Vars.domain_member }}
+    public_on_domain.yml: {}
+  {{ end }}
+{{ end }}
+
+# Workstaions inbound rules
+{{ if .Vars.domain_member }}
+  {{ if .Vars.system_type "Workstation" }}
+  inbound_rules.yml
+  {{ end }}
+{{ end }}

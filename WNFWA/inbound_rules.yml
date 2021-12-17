@@ -1,0 +1,17 @@
+{{ if .Vars.WNFWA_000100 }}
+command:
+  inbound_rules_output:
+    title: title: 000100 | Inbound exceptions to the firewall on domain workstations must only allow authorized remote management hosts.
+    exec: {{ .Vars.ps_regcheck }} {{ .Vars.get_inbound_rules }} {{ .Vars.inbound_rules_audit_output }}; echo "Please Manually check rules"
+    exit-status: 0
+    stdout:
+    - '!/Please Manually check rules/'
+    meta:
+      Cat: 2
+      CCI:
+      - CCI-000067
+      Group_Title: SRG-OS-000480-GPOS-00227
+      Rule_ID: SV-242009r698268_rule
+      STIG_ID: WNFWA-000100
+      Vul_ID: V-242009
+{{ end }}
