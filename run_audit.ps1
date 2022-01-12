@@ -13,40 +13,26 @@ $AUDIT_VARS = "WNFWA\$BENCHMARK.yml"
 $AUDIT_CONTENT_LOCATION = "C:\vagrant"
 $AUDIT_CONTENT_VERSION = "WNFWA-$BENCHMARK-Audit"
 $AUDIT_CONTENT_DIR = "$AUDIT_CONTENT_LOCATION\$AUDIT_CONTENT_VERSION"
-$AUDIT_OUTPUT = "$AUDIT_CONTENT_LOCATION\audit_$os_hostname_$epoch.json"
+
 
 # Allow Alpha version to run
 $env:GOSS_USE_ALPHA=1
 
 # Discover if workstation
 $ostypecode=(Get-WmiObject -Class Win32_OperatingSystem).ProductType
-if (ostypecode -ne 3){
-    $OS_TYPE=Server
+if ($ostypecode -eq 3){
+    $OS_TYPE='Server'
 }
 else{
-    $OS_TYPE=Workstation
+    $OS_TYPE='Workstation'
 }
 
 
 # Epoch time is required (as per Unix based from UTC)
 $audit_time = ([Math]::Floor([decimal](Get-Date(Get-Date).ToUniversalTime()-uformat "%s")))
 
-# output file
 
-# Set up AUDIT_OUT
-#$outfile
-if ([string]::IsNullOrEmpty($outfile)){
-    $AUDIT_OUT = "$AUDIT_OUTPUT"
-    }
-else {
-    $AUDIT_OUT = "$outfile"
-    }
 
-$AUDIT_ERR = "$AUDIT_CONTENT_LOCATION\audit_$os_hostname_$epoch.err"
-
-# create empty file - dont output
-New-Item -ItemType file $AUDIT_OUT | Out-Null
-New-Item -ItemType file $AUDIT_ERR | Out-Null
 
 # Set up config
 
@@ -61,10 +47,10 @@ $epoch=$audit_time
 $os_locale=((Get-TimeZone).Id) -replace ' ','_'
 $os_version=(([System.Environment]::OSVersion.Version).build)
 $os_hostname=(hostname)
-$system_type="$OS_TYPE"
+$system_type=$OS_TYPE
 
 
-$AUDIT_JSON_VARS = "{ 'benchmark':`'$BENCHMARK`','machine_uuid': `'$machine_uuid`','epoch': `'$epoch`', 'os_deployment_type': `'$system_type`',  'os_locale': `'$os_locale`', 'os_release': `'$os_version`', 'os_distribution': `'$os_name`', 'os_hostname': `'$os_hostname`', 'auto_group': `'$auto_group`', 'domain_member': `'$domain_member`'}"
+$AUDIT_JSON_VARS = "{ 'benchmark':`'$BENCHMARK`','machine_uuid': `'$machine_uuid`','epoch': `'$epoch`', 'os_deployment_type': `'$system_type`',  'os_locale': `'$os_locale`', 'os_release': `'$os_version`', 'os_distribution': `'$os_name`', 'os_hostname': `'$os_hostname`', 'auto_group': `'$auto_group`', 'domain_member': `'$domain_member`', 'domain_policy_enable': `'$domain_policy_enable`', 'public_policy_enable': `'$public_policy_enable`', 'private_policy_enable': `'$private_policy_enable`'}"
 
 # run audit
 # appears when parent job exits before children - the goss run is typical of this behaviour
@@ -83,6 +69,23 @@ $stdout = $p.StandardOutput.ReadToEnd()
 $stderr = $p.StandardError.ReadToEnd()
 $p.WaitForExit()
 
+# output file
+$AUDIT_OUTPUT = "$AUDIT_CONTENT_LOCATION\audit_$os_hostname_$epoch.json"
+$AUDIT_ERR = "$AUDIT_CONTENT_LOCATION\audit_$os_hostname_$epoch.err"
+
+# Set up AUDIT_OUT
+#$outfile
+if ([string]::IsNullOrEmpty($outfile)){
+    $AUDIT_OUT = "$AUDIT_OUTPUT"
+    }
+else {
+    $AUDIT_OUT = "$outfile"
+    }
+
+
+# create empty file - dont output
+New-Item -ItemType file $AUDIT_OUT | Out-Null
+New-Item -ItemType file $AUDIT_ERR | Out-Null
 
 # Write to relevant output to file
 Write-Output "$stdout" | Out-File -FilePath "$AUDIT_OUT"
