@@ -5,7 +5,10 @@ command:
   private_firewall_block_inbound:
     title: 000012 | The Windows Firewall with Advanced Security must block unsolicited inbound connections when connected to a private network. | Domain GPO
     exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PRV }} -Name DefaultInboundAction
-    exit-status: 0
+    exit-status: 
+      or:
+      - 0
+      - 1
     stdout:
     - '1'
     meta:
