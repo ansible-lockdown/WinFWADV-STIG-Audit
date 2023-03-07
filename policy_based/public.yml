@@ -3,11 +3,14 @@
 command:
     {{ if .Vars.WNFWA_000020 }}
   public_firewall_block_inbound:
-    title: 000020 | The Windows Firewall with Advanced Security must block unsolicited inbound connections when connected to a public network.
+    title: 000020 | The Windows Firewall with Advanced Security must block unsolicited inbound connections when connected to a public network. | Domain GPO
     exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB }} -Name DefaultInboundAction
-    exit-status: 0
+    exit-status:
+      or:
+      - 0
+      - 1
     stdout:
-    - '0'
+    - '1'
     meta:
       Cat: 1
       CCI:
@@ -21,7 +24,7 @@ command:
   {{ if .Vars.WNFWA_cat2 }}
     {{ if .Vars.WNFWA_000003 }}
   Public_firewall_on:
-    title: 000003 | The Windows Firewall with Advanced Security must be enabled when connected to a public network.
+    title: 000003 | The Windows Firewall with Advanced Security must be enabled when connected to a public network. | Domain GPO
     exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB }} -Name EnableFirewall
     exit-status: 0
     stdout:
@@ -37,7 +40,7 @@ command:
     {{ end }}
     {{ if .Vars.WNFWA_000021 }}
   public_firewall_block_outbound:
-    title: 000021 | The Windows Firewall with Advanced Security must allow outbound connections, unless a rule explicitly blocks the connection when connected to a public network.
+    title: 000021 | The Windows Firewall with Advanced Security must allow outbound connections, unless a rule explicitly blocks the connection when connected to a public network. | Domain GPO
     exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB }} -Name DefaultOutboundAction
     exit-status: 0
     stdout:
@@ -53,7 +56,7 @@ command:
     {{ end }}
     {{ if .Vars.WNFWA_000024 }}
   local_public_firewall_merged_gpo:
-    title: 000024 | The Windows Firewall with Advanced Security local firewall rules must not be merged with Group Policy settings when connected to a public network.
+    title: 000024 | The Windows Firewall with Advanced Security local firewall rules must not be merged with Group Policy settings when connected to a public network. | Domain GPO
     exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB }} -Name AllowLocalPolicyMerge
     exit-status: 0
     stdout:
@@ -69,7 +72,7 @@ command:
     {{ end }}
     {{ if .Vars.WNFWA_000025 }}
   local_public_connect_merged_gpo:
-    title: 000025 | The Windows Firewall with Advanced Security local connection rules must not be merged with Group Policy settings when connected to a public network.
+    title: 000025 | The Windows Firewall with Advanced Security local connection rules must not be merged with Group Policy settings when connected to a public network. | Domain GPO
     exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB }} -Name AllowLocalIPsecPolicyMerge
     exit-status: 0
     stdout:
@@ -87,7 +90,7 @@ command:
   {{ if .Vars.WNFWA_cat3 }}
     {{ if .Vars.WNFWA_000027 }}
   public_firewall_logsize:
-    title: 000027 | The Windows Firewall with Advanced Security log size must be configured for public network connections.
+    title: 000027 | The Windows Firewall with Advanced Security log size must be configured for public network connections. | Domain GPO
     exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB_LOG }} -Name LogFileSize
     exit-status: 0
     stdout:
@@ -101,9 +104,9 @@ command:
       STIG_ID: WNFWA-000027
       Vul_ID: V-242006
     {{ end }}
-    {{ if .Vars.WNFWA-000028 }}
+    {{ if .Vars.WNFWA_000028 }}
   public_firewall_log_dropped:
-    title: 000028 | The Windows Firewall with Advanced Security must log dropped packets when connected to a public network.
+    title: 000028 | The Windows Firewall with Advanced Security must log dropped packets when connected to a public network. | Domain GPO
     exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB_LOG }} -Name LogDroppedPackets
     exit-status: 0
     stdout:
@@ -117,9 +120,9 @@ command:
       STIG_ID: WNFWA-000028
       Vul_ID: V-242007
     {{ end }}
-    {{ if .Vars.WNFWA-000029 }}
+    {{ if .Vars.WNFWA_000029 }}
   public_firewall_log_success:
-    title: 000029 | The Windows Firewall with Advanced Security must log successful connections when connected to a public network.
+    title: 000029 | The Windows Firewall with Advanced Security must log successful connections when connected to a public network. | Domain GPO
     exec: {{ .Vars.ps_regcheck }} {{ .Vars.HKLM_POL_FW_PUB_LOG }} -Name LogSuccessfulConnections
     exit-status: 0
     stdout:

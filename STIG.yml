@@ -8,6 +8,11 @@ WNFWA_cat3: true
 # if running manually uncomment and set here
 #domain_member: true
 
+## Expected Policy
+# If domain member will check for domain policies in reg path
+# Set to false will make local polic checks
+domain_based_policy: true
+
 # Location to output the workstation inbound firewall rules for assessment
 inbound_rules_audit_output: c:\tmp\inbound_rules.txt 
 
@@ -23,6 +28,7 @@ WNFWA_000011: true
 
 # Private
 WNFWA_private: true
+WNFWA_000002: true
 WNFWA_000012: true
 WNFWA_000013: true
 WNFWA_000017: true
@@ -31,6 +37,7 @@ WNFWA_000019: true
 
 # Public
 WNFWA_public: true
+WNFWA_000003: true
 WNFWA_000020: true
 WNFWA_000021: true
 WNFWA_000024: true
